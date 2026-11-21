@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Epsilonly — A little practice. A little more confidence.",
+  title: "εpsilonly — A little practice. A little more confidence.",
   description: "A welcoming space to explore calculus, practice with your course material, and write math naturally.",
 };
 

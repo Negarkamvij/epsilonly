@@ -7,7 +7,7 @@ const copy = {
   signup: ["YOUR LEARNING, SAVED", "A little practice.", "A place to grow.", "Create an account to save your sessions and see how your practice adds up."],
   login: ["GOOD TO SEE YOU AGAIN", "Your next", "aha moment awaits.", "Sign in to pick up where you left off."],
   forgot: ["LET’S GET YOU BACK IN", "A fresh start", "for your password.", "Enter your account email and we’ll send a reset link."],
-  reset: ["ONE LAST STEP", "Make yourself", "a new password.", "Choose a unique passphrase for your Epsilonly account."],
+  reset: ["ONE LAST STEP", "Make yourself", "a new password.", "Choose a unique passphrase for your εpsilonly account."],
 };
 export default function AccountPage({ mode, next, confirmationFailed }) {
   const [label, title, accent, description] = copy[mode];

@@ -1,10 +1,14 @@
-# Deploy Epsilonly on Netlify
+# Deploy εpsilonly on Netlify
+
+Production address: https://epsilonly.netlify.app
+
+The display brand is **εpsilonly**; repository, folder, package, and URL names use ASCII `epsilonly`.
 
 Use a Netlify Free account for the initial deployment. Its free allowance is bounded; do not enable upgrades, credit purchases, or paid AI fallback automatically. Keep AI generation off until a working provider and its billing/limits have been explicitly approved.
 
 ## Build and environment
 
-Import `Negarkamvij/calcquest` from GitHub. The repository's `netlify.toml` selects Node 22, `npm run build` and the `.next` output. Netlify's automatic Next.js adapter supplies SSR, route handlers and middleware; this is not a static drag-and-drop deployment.
+Import `Negarkamvij/epsilonly` from GitHub. The repository's `netlify.toml` selects Node 22, `npm run build` and the `.next` output. Netlify's automatic Next.js adapter supplies SSR, route handlers and middleware; this is not a static drag-and-drop deployment.
 
 Set these in the Netlify dashboard for production builds and runtime:
 

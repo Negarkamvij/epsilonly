@@ -4,9 +4,9 @@ import AccountNav from "./AccountNav";
 export default function SiteHeader() {
   return (
     <header className="site-header">
-      <Link href="/" className="brand" aria-label="Epsilonly home">
+      <Link href="/" className="brand" aria-label="εpsilonly home">
         <span className="brand-mark" aria-hidden="true">∿</span>
-        <span>Epsilonly<span className="brand-period">.</span></span>
+        <span>εpsilonly<span className="brand-period">.</span></span>
       </Link>
       <nav aria-label="Main navigation">
         <Link href="/#explore" className="nav-link">Explore calculus</Link>

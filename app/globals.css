@@ -44,7 +44,7 @@ body {
 .math-tool:focus-visible { outline: 2px solid #7e22ce; outline-offset: 2px; }
 .math-tool:disabled { opacity: .45; cursor: not-allowed; }
 
-/* Epsilonly's light learning environment. */
+/* εpsilonly's light learning environment. */
 :root { --ink: #273e32; --muted: #68746b; --green: #45634b; --line: #e5e7de; }
 html { scroll-behavior: smooth; }
 * { box-sizing: border-box; }

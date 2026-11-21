@@ -1,4 +1,4 @@
-# Supabase setup for Epsilonly
+# Supabase setup for εpsilonly
 
 Status, November 20, 2026: the owner created the Supabase project. Its public URL/key are connected in the ignored local environment file, the migration was applied through the dashboard SQL Editor, and all six application tables were verified with RLS enabled. The local signup form is active. Site URL and the exact local callback were configured, email confirmation remains enabled, and the minimum password length was set to 12. No subscription, billing change, real student account, password entry, or confirmation email was created by the assistant. Read-only live API checks passed: the public key reaches auth settings, signups are enabled, and anonymous reads of student sessions and answers are denied with PostgreSQL permission errors. A user-run signup/confirmation test remains pending. The server-only secret key is still unset, so AI session creation and account deletion remain unavailable; AI calls also remain explicitly disabled.
 
@@ -57,7 +57,7 @@ Supabase's default SMTP service is for testing and restricts delivery to project
 
 ## Data flow and privacy
 
-- Supabase Auth stores credentials; Epsilonly never stores plaintext passwords or duplicates identity records.
+- Supabase Auth stores credentials; εpsilonly never stores plaintext passwords or duplicates identity records.
 - Middleware refreshes cookie-based sessions. Private pages and API routes independently verify the user with the Auth server; client-side navigation state is not authorization.
 - `practice_sessions`, `practice_questions`, `practice_answers` and `practice_attempts` have RLS policies that allow authenticated students to select only their own records. Anonymous access is denied.
 - Direct student writes to those tables are denied. Server-only generation RPCs create sessions and answer keys; user-authenticated RPCs validate ownership and save or submit their answers.
