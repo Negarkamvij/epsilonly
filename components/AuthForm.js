@@ -57,7 +57,7 @@ export default function AuthForm({ mode, next = "/dashboard", configured, confir
     {message && <p role="status" className="form-success">{message}</p>}
     <button type="submit" className="button" disabled={busy || !configured}>{busy ? "One moment…" : recovery ? "Send reset link" : reset ? "Save new password" : signup ? "Create my account ↗" : "Welcome back ↗"}</button>
     {!signup && !recovery && !reset && <Link href="/forgot-password">Forgot your password?</Link>}
-    {!reset && <p className="form-switch">{signup ? "Already have an account? " : recovery ? "Remembered it? " : "New to CalcQuest? "}<Link href={signup || recovery ? `/login?next=${encodeURIComponent(next)}` : `/signup?next=${encodeURIComponent(next)}`}>{signup || recovery ? "Sign in" : "Create an account"}</Link></p>}
+    {!reset && <p className="form-switch">{signup ? "Already have an account? " : recovery ? "Remembered it? " : "New to Epsilonly? "}<Link href={signup || recovery ? `/login?next=${encodeURIComponent(next)}` : `/signup?next=${encodeURIComponent(next)}`}>{signup || recovery ? "Sign in" : "Create an account"}</Link></p>}
     {signup && <p className="form-hint">We store your email and practice activity to keep your learning history. No school or real name required.</p>}
   </form>;
 }

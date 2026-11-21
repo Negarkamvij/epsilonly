@@ -1,4 +1,4 @@
-# CalcQuest AI development plan
+# Epsilonly AI development plan
 
 Inspection date: November 9, 2026. Scope: Milestone 1 only. This document proposes future work; it does not claim that those features exist. Review the plan before implementing Milestone 2. Do not commit without the owner's approval.
 
@@ -97,7 +97,7 @@ Generate concept-aligned variants from approved source revisions; support Easy/M
 
 #### Required math answer editor
 
-Students must be able to enter answers visually in a Pearson-style math editor: textbook-like fractions, powers, roots and symbols, with keyboard typing and a clickable/touch-friendly toolbar. This is an embedded CalcQuest answer interface; no Pearson account or integration is required.
+Students must be able to enter answers visually in a Pearson-style math editor: textbook-like fractions, powers, roots and symbols, with keyboard typing and a clickable/touch-friendly toolbar. This is an embedded Epsilonly answer interface; no Pearson account or integration is required.
 
 - Provide templates for fractions, exponents, subscripts, square/nth roots, parentheses, absolute values, logarithms, trigonometric functions, pi and infinity. Include calculus templates for integrals, derivatives, limits, sums and vectors/matrices where the supported question type needs them.
 - Let students move between template slots, edit nested expressions, select/delete content, and undo/redo. Preserve answers when navigating between questions. Provide clear input instructions and an accessible plain-text alternative using documented syntax.

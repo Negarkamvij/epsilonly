@@ -1,4 +1,4 @@
-# Deploy CalcQuest on Netlify
+# Deploy Epsilonly on Netlify
 
 Use a Netlify Free account for the initial deployment. Its free allowance is bounded; do not enable upgrades, credit purchases, or paid AI fallback automatically. Keep AI generation off until a working provider and its billing/limits have been explicitly approved.
 

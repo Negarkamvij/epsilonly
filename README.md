@@ -1,6 +1,6 @@
-# CalcQuest
+# Epsilonly
 
-CalcQuest is a Next.js calculus practice prototype. The phased platform architecture and current limitations are documented in [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md).
+Epsilonly is a Next.js calculus practice prototype. The phased platform architecture and current limitations are documented in [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md).
 
 ## Math answer editor
 
@@ -10,7 +10,7 @@ Answers are represented as LaTeX. Signed-in practice sessions autosave to Supaba
 
 ## Accounts and saved progress
 
-CalcQuest now includes a Supabase email/password integration, confirmation and password recovery routes, private practice sessions, answer autosave, submission history and a progress dashboard. The Supabase project is connected locally and the database migration has been applied. The signup form is active; account creation and email confirmation still need a user-run test. Public email delivery settings need configuring before inviting students. Follow [supabase/README.md](./supabase/README.md) and [.env.example](./.env.example), then apply the included SQL migration. Use `/signup`, `/login` and `/dashboard` after setup.
+Epsilonly now includes a Supabase email/password integration, confirmation and password recovery routes, private practice sessions, answer autosave, submission history and a progress dashboard. The Supabase project is connected locally and the database migration has been applied. The signup form is active; account creation and email confirmation still need a user-run test. Public email delivery settings need configuring before inviting students. Follow [supabase/README.md](./supabase/README.md) and [.env.example](./.env.example), then apply the included SQL migration. Use `/signup`, `/login` and `/dashboard` after setup.
 
 The service calculates and stores exact-answer matches on the server, not mathematical equivalence. AI answers remain unverified, and these matches are not mastery estimates or verified ML labels. Full extraction review, symbolic grading and adaptive prediction remain future milestones.
 
