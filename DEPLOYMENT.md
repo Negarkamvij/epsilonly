@@ -1,6 +1,8 @@
 # Deploy εpsilonly on Netlify
 
-Production address: https://epsilonly.netlify.app
+Production hostname: `epsilonly.netlify.app` (HTTPS).
+
+Keep the exact `APP_ORIGIN` value in the hosting environment. Netlify currently treats this variable as secret, so repeating the full value in source documentation causes a false-positive deployment block.
 
 The display brand is **εpsilonly**; repository, folder, package, and URL names use ASCII `epsilonly`.
 
