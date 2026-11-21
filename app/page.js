@@ -1,92 +1,41 @@
 import Link from "next/link";
+import Image from "next/image";
+import SiteHeader from "../components/SiteHeader";
+import PracticePreview from "../components/PracticePreview";
+
+const courses = [
+  { number: "01", name: "Calculus I", description: "Build your intuition for change.", topics: "Limits · Derivatives · Applications", symbol: "f′(x)", color: "sage" },
+  { number: "02", name: "Calculus II", description: "See how the pieces add up.", topics: "Integrals · Series · Polar coordinates", symbol: "∫", color: "peach" },
+  { number: "03", name: "Calculus III", description: "Give your thinking a new dimension.", topics: "Vectors · Partial derivatives · Multiple integrals", symbol: "∇f", color: "lilac" },
+];
+
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-start bg-gradient-to-b from-white to-blue-50 text-gray-800">
-      CalcQuest
-      <nav className="w-full flex justify-between items-center px-10 py-6">
-        <div className="flex items-center gap-2">
-          <div className="bg-purple-600 w-3 h-3 rounded-full"></div>
-          <h2 className="font-bold text-xl text-gray-800"></h2>
-        </div>
-        <div className="flex items-center gap-8 text-gray-700 font-medium">
-          <a href="#">About</a>
-          <a href="#">Help</a>
-          <button className="bg-purple-700 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition">
-            Login
-          </button>
-        </div>
-      </nav>
-      <section className="flex flex-col md:flex-row items-center justify-between w-10/12 mt-10">
-        <div className="max-w-lg text-center md:text-left">
-          <h1 className="text-5xl font-extrabold text-purple-700 mb-4">
-            Unleash Your <br /> Calculus Genius
-          </h1>
-          <p className="text-lg mb-8 text-gray-700">
-            Your personal AI-powered calculus gym. Generate endless questions,
-            get instant scores, and master calculus like never before.
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-            <Link
-              href="/exam" 
-              className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition">
-              Start New Calculus Exam
-            </Link>
-            <button className="border-2 border-purple-600 text-purple-700 px-6 py-3 rounded-lg font-semibold hover:bg-purple-50 transition">
-              Review Past Performance
-            </button>
+    <div className="learning-site">
+      <SiteHeader />
+      <main id="main-content">
+        <section className="home-hero page-width">
+          <div className="hero-copy">
+            <div className="eyebrow"><span className="eyebrow-dot" /> YOUR NEXT AHA MOMENT STARTS HERE</div>
+            <h1>Math makes sense.<br />Sometimes it just<br />takes a <em>little practice.</em></h1>
+            <p className="hero-description">A calmer space to get curious about calculus. Turn your course material into practice, explore ideas, and work through problems at your own pace.</p>
+            <div className="hero-actions"><Link href="/exam" className="button">Find your starting point <span aria-hidden="true">↗</span></Link><Link href="/math-editor" className="text-button">Try the math playground <span aria-hidden="true">→</span></Link></div>
+            <div className="hero-mascot">
+              <Image src="/brain.png" width={104} height={104} alt="A cheerful cartoon brain wearing oversized glasses" className="brain-mascot" />
+              <div className="mascot-speech"><strong>Big brain energy.<br />One small step at a time.</strong><span>Your calculus sidekick.</span></div>
+            </div>
           </div>
-        </div>
-        <div className="mt-10 md:mt-0">
-          <img
-            src="/brain.png"
-            alt="CalcQuest illustration"
-            className="rounded-xl shadow-lg w-72"
-          />
-        </div>
-      </section>
-      <section className="mt-24 w-10/12 text-center">
-        <h2 className="text-3xl font-bold mb-4">Core Functionalities</h2>
-        <p className="text-gray-600 mb-10">
-          Everything you need to conquer calculus, all in one dynamic platform.
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-white shadow-md rounded-xl p-6">
-            <h3 className="text-xl font-semibold mb-3 text-pink-600">
-              Calculus Question Generation
-            </h3>
-            <p className="text-gray-600">
-              Generate infinite problems from basic limits to complex integrals.
-            </p>
-          </div>
-          <div className="bg-white shadow-md rounded-xl p-6">
-            <h3 className="text-xl font-semibold mb-3 text-purple-600">
-              Detailed Score Reporting
-            </h3>
-            <p className="text-gray-600">
-              Instant feedback and performance analysis after every session.
-            </p>
-          </div>
-
-          <div className="bg-white shadow-md rounded-xl p-6">
-            <h3 className="text-xl font-semibold mb-3 text-blue-600">
-              Performance Analysis
-            </h3>
-            <p className="text-gray-600">
-              Track progress over time and find weak spots quickly.
-            </p>
-          </div>
-        </div>
-      </section>
-      <div>working container</div>
-      <footer className="mt-20 mb-6 text-center text-sm text-gray-500 space-x-6">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
-        <a href="#">Contact Us</a>
-        <div className="mt-3">
-          <span>© 2025 CalcQuest. All rights reserved.</span>
-        </div>
-      </footer>
-    </main>
+          <PracticePreview />
+        </section>
+        <div className="learning-strip page-width"><span>Made for the way you learn.</span><span><i aria-hidden="true">✓</i> Your own course material</span><span><i aria-hidden="true">✓</i> Natural math input</span><span><i aria-hidden="true">✓</i> Room to figure it out</span></div>
+        <section className="course-section page-width" id="explore" aria-labelledby="courses-heading">
+          <div className="section-heading"><div><div className="eyebrow">A LITTLE DIRECTION</div><h2 id="courses-heading">Where will curiosity take you?</h2></div><p>From your first limit to a whole new dimension.<br />There’s a place for you to begin.</p></div>
+          <div className="course-grid">{courses.map((course) => <Link href={`/exam?course=${encodeURIComponent(course.name)}`} className={`course-card ${course.color}`} key={course.number}><div className="course-top"><span className="course-number">{course.number} / EXPLORE</span><span className="course-symbol" aria-hidden="true">{course.symbol}</span></div><h3>{course.name}</h3><p>{course.description}</p><div className="course-bottom"><span>{course.topics}</span><span className="course-arrow" aria-hidden="true">↗</span></div></Link>)}</div>
+        </section>
+        <section className="how-section page-width" aria-labelledby="how-heading"><div className="how-intro"><div className="eyebrow">MAKE IT YOURS</div><h2 id="how-heading">Your material.<br />A fresh way to practice.</h2><Link href="/exam" className="text-button">Start with a document <span aria-hidden="true">→</span></Link></div><div className="how-steps"><article><span>01</span><div><h3>Bring what you’re learning</h3><p>Start with a worksheet, practice exam, or a few problems from your course.</p></div></article><article><span>02</span><div><h3>Give yourself a fresh challenge</h3><p>Generate new questions inspired by your material, then take them one at a time.</p></div></article><article><span>03</span><div><h3>Make room for the aha</h3><p>Write answers with a visual math editor and review the suggested answers afterward.</p></div></article></div></section>
+        <section className="gentle-banner page-width"><Image src="/brain.png" width={72} height={72} alt="" className="banner-mascot" /><div><h2>You don’t have to get it all at once.</h2><p>Just bring your curiosity. We’ll start with one problem.</p></div><Link href="/exam" className="button">Let’s give it a try <span aria-hidden="true">↗</span></Link></section>
+      </main>
+      <footer className="site-footer page-width"><Link href="/" className="brand"><span className="brand-mark" aria-hidden="true">∿</span>CalcQuest.</Link><p>A little practice. A little more confidence.</p><span>AI-generated material can contain errors.</span></footer>
+    </div>
   );
 }

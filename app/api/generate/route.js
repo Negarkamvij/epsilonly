@@ -1,89 +1,70 @@
-// app/api/generate/route.js
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import { NextResponse } from "next/server";
+import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
+import { getIdentity } from "../../../lib/supabase/server";
+import { createAdminClient } from "../../../lib/supabase/admin";
+import { uploadTypeMatches } from "../../../lib/validation";
+import { json, sameOrigin, readMultipart } from "../../../lib/http";
+import { generateStoredSession } from "../../../lib/generation-service";
+import { providerFailure } from "../../../lib/provider-errors";
+import { practicePrompt } from "../../../lib/prompts/practice";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+export const runtime = "nodejs";
+export const maxDuration = 90;
 
-export async function POST(req) {
+export async function POST(request) {
+  if (!sameOrigin(request)) return json({ error: "Request origin is not allowed." }, 403);
+  const { user } = await getIdentity();
+  if (!user) return json({ error: "Please sign in before creating a practice session." }, 401);
+  if (process.env.ENABLE_AI_GENERATION !== "true") return json({ error: "AI generation is paused while a free-tier provider is configured. You can still use the math playground." }, 503);
+  const admin = createAdminClient();
+  if (!admin || !process.env.GEMINI_API_KEY) return json({ error: "Practice generation is not configured yet." }, 503);
+  let form;
+  try { form = await readMultipart(request); }
+  catch { return json({ error: "Choose a PDF, JPG, or PNG under 20 MiB." }, 413); }
+  const file = form.get("exam_file");
+  const course = String(form.get("topic") || "Calculus").trim();
+  if (!file || typeof file.arrayBuffer !== "function" || file.size === 0 || file.size > 20 * 1024 * 1024 || !course || course.length > 100 || form.get("authorized") !== "true") {
+    return json({ error: "Choose an authorized file under 20 MiB and a subject under 100 characters." }, 400);
+  }
+  const buffer = Buffer.from(await file.arrayBuffer());
+  if (!uploadTypeMatches(buffer, file.type)) return json({ error: "The file must be a valid PDF, JPG, or PNG." }, 400);
+  const quota = await admin.rpc("reserve_generation_request", { p_user_id: user.id });
+  if (quota.error) return json({ error: "Practice storage is not ready yet. Please try again later." }, 503);
+  if (!quota.data) return json({ error: "You can generate five sessions per 15 minutes. Please try again later." }, 429);
   try {
-    const body = await req.json();
-    const topic = body.topic || "derivatives";
-
-    console.log("📘 Generating questions for:", topic);
-
-    const model = genAI.getGenerativeModel({ 
+    const model = new GoogleGenerativeAI(process.env.GEMINI_API_KEY).getGenerativeModel({
       model: "gemini-2.5-flash",
-    });
-
-    const prompt = `
-      Generate 3 calculus exam questions about ${topic}.
-      Each question must have a 'question' and a 'solution' field.
-      The solution should be the correct short answer, using LaTeX formatting (e.g., \\frac, \\cos) enclosed in dollar signs ($...$).
-      Return ONLY the final JSON object, using an object with a 'questions' key.
-      Do not include any extra text, explanations, or markdown formatting outside of the JSON.
-    `;
-
-    // Correct syntax: prompt and config as separate arguments
-    const result = await model.generateContent(
-      prompt,
-      {
-        responseMimeType: "application/json",
-        responseSchema: {
-          type: "object",
-          properties: {
-            questions: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  question: { type: "string" },
-                  solution: { type: "string" },
-                },
-                required: ["question", "solution"],
-              },
-            },
-          },
-          required: ["questions"],
-        },
-      }
-    );
-
-    const rawText = result.response.text().trim(); 
-    
-    // 1. Clean the text by stripping markdown backticks
-    const cleanedText = rawText.replace(/```json|```/g, "").trim();
-
-    // 2. FINAL FIX: Escape backslashes for JSON safety.
-    // The model uses a single backslash (\) for LaTeX. JSON requires a double backslash (\\).
-    // The .replace(/\\/g, '\\\\') converts a single literal '\' into a literal '\\' for JSON.
-    const escapedText = cleanedText.replace(/\\/g, '\\\\');
-
-    console.log("🧠 Gemini raw output:", rawText);
-    console.log("🧼 Cleaned JSON (before final escape):", cleanedText);
-    console.log("🔒 Escaped JSON (ready to parse):", escapedText); 
-    
-    let data = { questions: [] };
-
-    if (escapedText) {
-      try {
-        data = JSON.parse(escapedText); 
-      } catch (e) {
-        console.error("❌ FINAL JSON parsing failed:", e.message);
-      }
-    }
-    
-    return NextResponse.json(data); 
-    
-  } catch (error) {
-    console.error("🔥 Gemini API Error:", error);
-    
-    return NextResponse.json(
-      { 
-        questions: [], 
-        error: "Failed to generate questions.", 
-        message: error.message 
+      generationConfig: {
+        maxOutputTokens: 8192, responseMimeType: "application/json",
+        responseSchema: { type: SchemaType.OBJECT, properties: {
+          questions: { type: SchemaType.ARRAY, items: { type: SchemaType.OBJECT,
+            properties: { question: { type: SchemaType.STRING }, solution: { type: SchemaType.STRING },
+              topic: { type: SchemaType.STRING }, difficulty: { type: SchemaType.STRING, enum: ["Easy", "Medium", "Hard"] } },
+            required: ["question", "solution", "topic", "difficulty"],
+          } },
+        }, required: ["questions"] },
       },
-      { status: 500 }
-    );
+    });
+    const stored = await generateStoredSession({
+      userId: user.id, course,
+      generate: async () => {
+        const result = await model.generateContent([
+          { inlineData: { data: buffer.toString("base64"), mimeType: file.type } }, practicePrompt(course),
+        ], { timeout: 60000 });
+        return result.response.text();
+      },
+      store: async ({ userId, course, questions }) => {
+        const { data,error } = await admin.rpc("create_practice_session", {
+          p_user_id:userId,p_course:course,p_questions:questions,
+        });
+        if (error) throw Object.assign(new Error("Practice storage unavailable"),{kind:"storage"});
+        return data;
+      },
+    });
+    return json(stored);
+  } catch (error) {
+    if (error?.kind === "invalid_generation") return json({error:"The AI returned incomplete question data. Please try again."},502);
+    if (error?.kind === "storage") return json({error:"The generated session could not be saved. Please try again."},503);
+    const failure = providerFailure(error);
+    return json({ error: failure.message }, failure.status);
   }
 }
